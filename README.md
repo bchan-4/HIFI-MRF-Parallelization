@@ -1,92 +1,105 @@
-# BME590L_FinalProject
+# BME 590L Final Project: Parallelization of HIFI-MRF    
+>**Author**: Brian Chan  
+----------
+## Summary  
+This project parallelizes the HIFI-MRF pipeline described in Cameron, Dostie, and Blanchette, Genome Biology, 2020. The GitHub repository for the original HIFI package can be found at https://github.com/BlanchetteLab/HIFI.  Paralllelization was achieved using MPI. Here, we describe the contents of this repository as well as how to run the parallelized version of HIFI-MRF.   
 
-Parallelization of HIFI
+-----------
 
-## Getting started
+Make sure that within your current working directory you have the following files and directories in addition to this `README.md`:  
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+- `Makefile`  
+- `src`  
+- `Data`  
+- `Analysis`      
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+----------   
+Within ``` src ``` there should be the following files:    
 
-## Add your files
+- `BAMtoSparseMatrix.py`  
+- `callPeaks.cpp`  
+- `HIFI.cpp`  
+- `HIFI_serial.cpp`  
+- `HIFI_misc.h`  
+- `HIFI_MyMatrix.h`  
+- `HIFI_options.h`  
+- `HIFI_options.cpp`  
+- `HIFI_Advanced.cpp`  
+- `parseHIFIoutput.py`  
+- `plotHIFIoutput.py`  
+- `SparseToFixed.py`  
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+You will not used any of the Python scripts or `callPeaks.cpp`, but they are part of the original pipeline and can be used for pre-/post-processing.
+See original documentation for details.  
 
-```
-cd existing_repo
-git remote add origin https://gitlab.oit.duke.edu/bkc23/bme590l_finalproject.git
-git branch -M main
-git push -uf origin main
-```
+``` HIFI_serial.cpp ``` is the serial code. It has some comments in it from the original source, but many comments are added by yours truly to help guide the user.  
+``` HIFI.cpp ``` is the parallelized code with comments (pHIFI-MRF in the final writeup).    
+``` HIFI_Advanced.cpp ``` further optimizes and parallelizes HIFI-MRF (advanced pHIFI-MRF; see "Preliminary results of future work" section in the final writeup).
+```HIFI_misc.h```, ```HIFI_MyMatrix.h```, ```HIFI_options.h```, and ```HIFI_options.cpp``` define class templates and HIFI parameters used during runtime.
 
-## Integrate with your tools
+-------------------  
+Within ``` Data ``` there should be the following files:  
+- `HindIII.hg19.chr9_chr9.RF.tsv`  
+- `MboI.hg38.chr4_chr4.RF.Truncate_1000.tsv`  
+- `MboI.hg38.chr4_chr4.RF.Truncate_2000.tsv`  
+- `MboI.hg38.NEWBAM.chr4_chr4.RF.Truncate_4000.tsv`  
+- `MboI.hg38.NEWBAM.chr4_chr4.RF.Truncate_8000.tsv`  
+- `MboI.hg38.chr4_chr4.RF.Truncate_16000.tsv`  
 
-- [ ] [Set up project integrations](https://gitlab.oit.duke.edu/bkc23/bme590l_finalproject/-/settings/integrations)
 
-## Collaborate with your team
+`HindIII.hg19.chr9_chr9.RF.tsv` was used for strong scaling analysis. The `MboI...` files were used for weak scaling analysis The `MboI...` files have restriction fragment read count matrices for either 1000, 2000, 4000, 8000, or 16000 restriction fragments.  The `HindIII` data is the supplied example from the original GitHub repository (see above). The `MboI...` files are processed from the BAM file found in the 4DNucleome project (https://data.4dnucleome.org/files-processed/4DNFIP9ADMXB/#details). See final writeup for details on input data pre-processing.  
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+Note that the files in this directory are already pre-processed from BAM files using the `BAMtoSparseMatrix.py` script in the `src` directory on the Duke Compute CLuster. With reference to the original HIFI package documentation, this project starts optimization from step 2 in the Quick Start section of the original `README.md`.
 
-## Test and Deploy
+-------------------  
+Within ``` Analysis ``` there should be the following files:  
+- `CompSCC.m`  
+- `PlotHeatMap.m`  
+- `plotIFTriangles.m`  
+- `CompareIFs.m`  
 
-Use the built-in continuous integration in GitLab.
+`CompSCC.m` calculates the stratum-adjusted correlation coefficient between two interaction frequency (IF) matrices (see Materials and Methods in the final writeup and Yang, et al, Genome Research, 2017).  
+`PlotHeatMap.m` visualizes IF matrices as heat maps.  
+`plotIFTriangles.m` simultaneously plots two IF matrix heat maps: one in the upper triangular portion of the plot and the second in the lower triangular portion.  
+`CompareIFs.m` uses the three previous files to run a full comparison between two IF matrices.  
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+To use, enter the `Analysis` directory, load MATLAB and run:  
 
-***
+```CompareIFs(<SERIAL_IF_TSV>, <PARALLEL_IF_TSV>, <OUTPUT_FILE_PREFIXES>);```    
 
-# Editing this README
+where `<SERIAL_IF_TSV>` is the path and filename of the IF matrix `.tsv` file from the serial HIFI-MRF output, `<PARALLEL_IF_TSV>` is the path and filename of the IF matrix `.tsv` file from the pHIFI-MRF output, and `<OUTPUT_FILE_PREFIXES>` is the desired prefix to name the output files. All three arguments must be strings. The function will plot a heat map where the upper triangular portion is the parallel IF matrix and the lower triangular portion is the serial IF matrix. This will be saved in the file `<OUTPUT_FILE_PREFIXES>.pdf`. Another output file called `<OUTPUT_FILE_PREFIXES>.txt` will contain the SSE, SCC, and correlation per stratum (diagonal) for the two IF matrices. See comments within `CompareIFs.m` for returning function values in a MATLAB session.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!).  Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+-------------------  
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+## Compile and run  
 
-## Name
-Choose a self-explaining name for your project.
+Compilation uses the g++ and mpicc. To compile the original serial HIFI code:
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+``` make HIFIserial ```  
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+To run the original serial HIFI code:
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+``` src/HIFIserial <PATH/TO/INPUT> <OUTPUTNAME>.tsv -method=mrf```  
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+To compile the parallel version (pHIFI-MRF) used for the majority of the project:  
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+``` make HIFI ```    
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+To run:
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+```ibrun -np <NUMTASKS> src/HIFI <PATH/TO/INPUT> <OUTPUTNAME>.tsv -method=mrf ```  
+or  
+```mpirun -np <NUMTASKS> src/HIFI <PATH/TO/INPUT> <OUTPUTNAME>.tsv -method=mrf ```  
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+To compile the advanced parallel version (advanced pHIFI-MRF) used for preliminary testing of continued optimizations:  
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+``` make HIFIAdvanced ```  
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+To run:
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+```ibrun -np <NUMTASKS> src/HIFIAdvanced <PATH/TO/INPUT> <OUTPUTNAME>.tsv -method=mrf ```  
+or  
+```mpirun -np <NUMTASKS> src/HIFIAdvanced <PATH/TO/INPUT> <OUTPUTNAME>.tsv -method=mrf ```  
 
-## License
-For open source projects, say how it is licensed.
+For the parallel versions, ``` <NUMTASKS> ``` is the number of MPI tasks you want to use. For all versions, `<PATH/TO/INPUT>` is the path and filename of your desired input file, for example `Data/HindIII.hg19.chr9_chr9.RF.tsv`. For all versions, ``` <OUTPUTNAME>.tsv ``` will be the name of the `.tsv` file containing the optimized interaction frequency matrix. The parallel versions will also create a file called `TimeFile_<NUMTASKS>.txt` with the runtimes for the adaptive kernel density estimation algorithm, the full setup of the code before the Markiv random field component, the Markov random field component, and the entire code. The program will also print periodic status updates to standard error. Note that the parallel code can also be run with a single task without issue.  
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
