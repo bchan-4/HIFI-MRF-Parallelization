@@ -35,8 +35,8 @@ You will not used any of the Python scripts or `callPeaks.cpp`, but they are par
 See original documentation for details.  
 
 ``` HIFI_serial.cpp ``` is the serial code. It has some comments in it from the original source, but many comments are added by yours truly to help guide the user.  
-``` HIFI.cpp ``` is the parallelized code with comments (pHIFI-MRF in the final writeup).    
-``` HIFI_Advanced.cpp ``` further optimizes and parallelizes HIFI-MRF (advanced pHIFI-MRF; see "Preliminary results of future work" section in the final writeup).
+``` HIFI.cpp ``` is the parallelized code with comments.    
+``` HIFI_Advanced.cpp ``` further optimizes and parallelizes HIFI-MRF.
 ```HIFI_misc.h```, ```HIFI_MyMatrix.h```, ```HIFI_options.h```, and ```HIFI_options.cpp``` define class templates and HIFI parameters used during runtime.
 
 -------------------  
@@ -49,7 +49,7 @@ Within ``` Data ``` there should be the following files:
 - `MboI.hg38.chr4_chr4.RF.Truncate_16000.tsv`  
 
 
-`HindIII.hg19.chr9_chr9.RF.tsv` was used for strong scaling analysis. The `MboI...` files were used for weak scaling analysis The `MboI...` files have restriction fragment read count matrices for either 1000, 2000, 4000, 8000, or 16000 restriction fragments.  The `HindIII` data is the supplied example from the original GitHub repository (see above). The `MboI...` files are processed from the BAM file found in the 4DNucleome project (https://data.4dnucleome.org/files-processed/4DNFIP9ADMXB/#details). See final writeup for details on input data pre-processing.  
+`HindIII.hg19.chr9_chr9.RF.tsv` was used for strong scaling analysis. The `MboI...` files were used for weak scaling analysis The `MboI...` files have restriction fragment read count matrices for either 1000, 2000, 4000, 8000, or 16000 restriction fragments.  The `HindIII` data is the supplied example from the original GitHub repository (see above). The `MboI...` files are processed from the BAM file found in the 4DNucleome project (https://data.4dnucleome.org/files-processed/4DNFIP9ADMXB/#details).
 
 Note that the files in this directory are already pre-processed from BAM files using the `BAMtoSparseMatrix.py` script in the `src` directory on the Duke Compute CLuster. With reference to the original HIFI package documentation, this project starts optimization from step 2 in the Quick Start section of the original `README.md`.
 
@@ -60,7 +60,7 @@ Within ``` Analysis ``` there should be the following files:
 - `plotIFTriangles.m`  
 - `CompareIFs.m`  
 
-`CompSCC.m` calculates the stratum-adjusted correlation coefficient between two interaction frequency (IF) matrices (see Materials and Methods in the final writeup and Yang, et al, Genome Research, 2017).  
+`CompSCC.m` calculates the stratum-adjusted correlation coefficient between two interaction frequency (IF) matrices (see Yang, et al, Genome Research, 2017).  
 `PlotHeatMap.m` visualizes IF matrices as heat maps.  
 `plotIFTriangles.m` simultaneously plots two IF matrix heat maps: one in the upper triangular portion of the plot and the second in the lower triangular portion.  
 `CompareIFs.m` uses the three previous files to run a full comparison between two IF matrices.  
