@@ -4,6 +4,8 @@
 ## Summary  
 This project parallelizes the HIFI-MRF pipeline described in Cameron, Dostie, and Blanchette, Genome Biology, 2020. The GitHub repository for the original HIFI package can be found at https://github.com/BlanchetteLab/HIFI.  Paralllelization was achieved using MPI. Here, we describe the contents of this repository as well as how to run the parallelized version of HIFI-MRF.   
 
+This project was for the "Computational Foundations of Biomedical Simulations" class at Duke University taught by Dr. Amanda Randles.
+
 -----------
 
 Make sure that within your current working directory you have the following files and directories in addition to this `README.md`:  
